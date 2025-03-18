@@ -1,0 +1,28 @@
+version: '3.8'
+services:
+  app:
+    build: .
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    environment:
+      - DATABASE_URL=postgresql://polybooks:password@db:5432/polybooks
+      - JWT_SECRET=${JWT_SECRET:-your_jwt_secret_here}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    volumes:
+      - ./app:/app
+  
+  db:
+    image: postgres:14
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=polybooks
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=polybooks
+    ports:
+      - "5432:5432"
+
+volumes:
+  postgres_data:
